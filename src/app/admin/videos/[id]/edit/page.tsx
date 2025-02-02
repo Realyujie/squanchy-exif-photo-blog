@@ -5,16 +5,13 @@ import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
-type Props = {
-  params: {
-    id: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+export const dynamic = 'force-dynamic';
 
-export async function generateMetadata(
-  { params, searchParams }: Props,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
   const video = await getVideoCached(params.id);
   
   if (!video) {
@@ -30,8 +27,9 @@ export async function generateMetadata(
 
 export default async function AdminVideoEditPage({
   params,
-  searchParams,
-}: Props) {
+}: {
+  params: { id: string };
+}) {
   const video = await getVideoCached(params.id);
 
   if (!video) {
