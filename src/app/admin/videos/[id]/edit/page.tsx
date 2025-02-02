@@ -1,18 +1,18 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_VIDEOS } from '@/site/paths';
 import { getVideoCached } from '@/video/cache';
-import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { VideoPageParams } from '@/types/next';
+import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const video = await getVideoCached(params.id);
+export async function generateMetadata(
+  props: VideoPageParams,
+): Promise<Metadata> {
+  const video = await getVideoCached(props.params.id);
   
   if (!video) {
     return {
@@ -25,12 +25,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function AdminVideoEditPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const video = await getVideoCached(params.id);
+export default async function AdminVideoEditPage(
+  props: VideoPageParams,
+) {
+  const video = await getVideoCached(props.params.id);
 
   if (!video) {
     notFound();

@@ -6,15 +6,15 @@ import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import PhotoDate from '@/photo/PhotoDate';
 import { Metadata } from 'next';
+import { VideoPageParams } from '@/types/next';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const video = await getVideoCached(params.id);
+export async function generateMetadata(
+  props: VideoPageParams,
+): Promise<Metadata> {
+  const video = await getVideoCached(props.params.id);
   
   if (!video) {
     return {
@@ -28,13 +28,11 @@ export async function generateMetadata({
   };
 }
 
-export default async function VideoPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function VideoPage(
+  props: VideoPageParams,
+) {
   const timezone = (await cookies()).get(TIMEZONE_COOKIE_NAME)?.value;
-  const video = await getVideoCached(params.id);
+  const video = await getVideoCached(props.params.id);
   
   if (!video) {
     notFound();
