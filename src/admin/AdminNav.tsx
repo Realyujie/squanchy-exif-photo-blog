@@ -11,12 +11,14 @@ import {
   PATH_ADMIN_VIDEOS,
 } from '@/site/paths';
 import AdminNavClient from './AdminNavClient';
+import { getVideosMetaCached } from '@/video/cache';
 
 export default async function AdminNav() {
   const [
     countPhotos,
     countUploads,
     countTags,
+    countVideos,
     mostRecentPhotoUpdateTime,
   ] = await Promise.all([
     getPhotosMetaCached({ hidden: 'include' })
@@ -29,6 +31,9 @@ export default async function AdminNav() {
         return 0;
       }),
     getUniqueTagsCached().then(tags => tags.length).catch(() => 0),
+    getVideosMetaCached({ hidden: 'include' })
+      .then(({ count }) => count)
+      .catch(() => 0),
     getPhotosMostRecentUpdateCached().catch(() => undefined),
   ]);
 
@@ -43,7 +48,7 @@ export default async function AdminNav() {
   items.push({
     label: 'Videos',
     href: PATH_ADMIN_VIDEOS,
-    count: 0, // 这里可以添加视频数量的统计
+    count: countVideos,
   });
 
   // Uploads

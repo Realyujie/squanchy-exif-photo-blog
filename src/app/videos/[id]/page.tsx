@@ -5,34 +5,10 @@ import { clsx } from 'clsx/lite';
 import { cookies } from 'next/headers';
 import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import PhotoDate from '@/photo/PhotoDate';
-import { Metadata } from 'next';
-import { VideoPageParams } from '@/types/next';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-export async function generateMetadata(
-  props: VideoPageParams,
-): Promise<Metadata> {
-  const video = await getVideoCached(props.params.id);
-  
-  if (!video) {
-    return {
-      title: 'Video Not Found',
-    };
-  }
-
-  return {
-    title: video.title,
-    description: video.description,
-  };
-}
-
-export default async function VideoPage(
-  props: VideoPageParams,
-) {
+export default async function VideoPage({ params }: { params: { id: string } }) {
   const timezone = (await cookies()).get(TIMEZONE_COOKIE_NAME)?.value;
-  const video = await getVideoCached(props.params.id);
+  const video = await getVideoCached(params.id);
   
   if (!video) {
     notFound();
@@ -48,18 +24,8 @@ export default async function VideoPage(
               <div className="text-dim uppercase">
                 <PhotoDate
                   photo={{
-                    id: video.id,
-                    title: video.title,
                     createdAt: video.createdAt,
                     updatedAt: video.updatedAt,
-                    takenAt: video.createdAt,
-                    takenAtNaive: video.createdAt.toISOString(),
-                    takenAtNaiveFormatted: video.createdAt.toISOString(),
-                    tags: [],
-                    url: video.thumbnailUrl,
-                    blurData: '',
-                    aspectRatio: 1.777,
-                    extension: 'jpg',
                   }}
                   dateType="createdAt"
                   timezone={timezone}

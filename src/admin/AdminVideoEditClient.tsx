@@ -8,24 +8,32 @@ import LoaderButton from '@/components/primitives/LoaderButton';
 import Note from '@/components/Note';
 import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_VIDEOS } from '@/site/paths';
+import { updateVideoAction } from '@/video/actions';
 
 export default function AdminVideoEditClient({ video }: { video: Video }) {
   const router = useRouter();
   const [videoTitle, setVideoTitle] = useState(video.title);
   const [videoDescription, setVideoDescription] = useState(video.description || '');
   const [videoUrl, setVideoUrl] = useState(`https://www.youtube.com/watch?v=${video.youtubeId}`);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSave = async () => {
-    // 这里添加保存视频到数据库的逻辑
-    console.log('Saving video:', {
-      id: video.id,
-      title: videoTitle,
-      description: videoDescription,
-      url: videoUrl,
-    });
-    
-    // 保存成功后返回列表页面
-    router.push(PATH_ADMIN_VIDEOS);
+    try {
+      setIsSubmitting(true);
+      const formData = new FormData();
+      formData.append('title', videoTitle);
+      formData.append('description', videoDescription);
+      formData.append('youtubeUrl', videoUrl);
+      
+      await updateVideoAction(video.id, formData);
+      router.push(PATH_ADMIN_VIDEOS);
+      router.refresh();
+    } catch (error) {
+      console.error('更新视频失败:', error);
+      alert(error instanceof Error ? error.message : '更新视频失败');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -36,7 +44,7 @@ export default function AdminVideoEditClient({ video }: { video: Video }) {
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="block text-sm font-medium">
-                  Video Title
+                  视频标题
                   <input
                     type="text"
                     value={videoTitle}
@@ -47,14 +55,14 @@ export default function AdminVideoEditClient({ video }: { video: Video }) {
                       'bg-white dark:bg-gray-800',
                       'px-3 py-2'
                     )}
-                    placeholder="Enter Video Title"
+                    placeholder="输入视频标题"
                   />
                 </label>
               </div>
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium">
-                  Video Description
+                  视频描述
                   <textarea
                     value={videoDescription}
                     onChange={(e) => setVideoDescription(e.target.value)}
@@ -65,14 +73,14 @@ export default function AdminVideoEditClient({ video }: { video: Video }) {
                       'px-3 py-2'
                     )}
                     rows={3}
-                    placeholder="Enter Video Description"
+                    placeholder="输入视频描述"
                   />
                 </label>
               </div>
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium">
-                  YouTube Video Link
+                  YouTube 视频链接
                   <input
                     type="text"
                     value={videoUrl}
@@ -83,7 +91,7 @@ export default function AdminVideoEditClient({ video }: { video: Video }) {
                       'bg-white dark:bg-gray-800',
                       'px-3 py-2'
                     )}
-                    placeholder="Enter YouTube Video Link"
+                    placeholder="输入 YouTube 视频链接"
                   />
                 </label>
               </div>
@@ -91,12 +99,14 @@ export default function AdminVideoEditClient({ video }: { video: Video }) {
               <div className="flex justify-end gap-2">
                 <LoaderButton
                   onClick={() => router.push(PATH_ADMIN_VIDEOS)}
+                  disabled={isSubmitting}
                 >
                   取消
                 </LoaderButton>
                 <LoaderButton
                   onClick={handleSave}
-                  disabled={!videoTitle || !videoUrl}
+                  disabled={isSubmitting || !videoTitle || !videoUrl}
+                  isLoading={isSubmitting}
                   primary
                 >
                   保存
