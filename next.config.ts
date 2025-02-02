@@ -28,7 +28,14 @@ const generateRemotePattern = (hostname: string) =>
     pathname: '/**',
   } as const);
 
-const remotePatterns: RemotePattern[] = [];
+const remotePatterns: RemotePattern[] = [
+  {
+    protocol: 'https',
+    hostname: 'img.youtube.com',
+    port: '',
+    pathname: '/**',
+  }
+];
 
 if (HOSTNAME_VERCEL_BLOB) {
   remotePatterns.push(generateRemotePattern(HOSTNAME_VERCEL_BLOB));

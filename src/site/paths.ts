@@ -5,13 +5,62 @@ import { FilmSimulation } from '@/simulation';
 import { parameterize } from '@/utility/string';
 import { TAG_HIDDEN } from '@/tag';
 
+// Root
+export const PATH_ROOT = '/';
+
+// Views
+export const PATH_GRID = '/grid';
+export const PATH_FEED = '/feed';
+export const PATH_VIDEOS = '/videos';
+
+// Admin
+export const PATH_ADMIN = '/admin';
+export const PATH_ADMIN_PHOTOS = '/admin/photos';
+export const PATH_ADMIN_VIDEOS = '/admin/videos';
+export const PATH_ADMIN_UPLOADS = '/admin/uploads';
+export const PATH_ADMIN_TAGS = '/admin/tags';
+export const PATH_ADMIN_CONFIGURATION = '/admin/configuration';
+
+// Auth
+export const PATH_SIGN_IN = '/sign-in';
+
+// Paths that require authentication
+export const PROTECTED_PATHS = [
+  PATH_ADMIN,
+  PATH_ADMIN_PHOTOS,
+  PATH_ADMIN_VIDEOS,
+  PATH_ADMIN_UPLOADS,
+  PATH_ADMIN_TAGS,
+  PATH_ADMIN_CONFIGURATION,
+];
+
+// Path checking
+export const isPathSignIn = (path: string) =>
+  path === PATH_SIGN_IN;
+
+export const isPathProtected = (path: string) =>
+  PROTECTED_PATHS.some(p => path.startsWith(p));
+
+export const isPathAdmin = (path: string) =>
+  path.startsWith(PATH_ADMIN);
+
+export const isPathAdminConfiguration = (path: string) =>
+  path === PATH_ADMIN_CONFIGURATION;
+
+export const isPathTopLevelAdmin = (path: string) =>
+  PROTECTED_PATHS.includes(path as any);
+
+export const isPathGrid = (path: string) =>
+  path === PATH_GRID || path === PATH_ROOT;
+
+export const isPathFeed = (path: string) =>
+  path === PATH_FEED;
+
+export const isPathVideos = (path: string) =>
+  path === PATH_VIDEOS;
+
 // Core paths
-export const PATH_ROOT                = '/';
-export const PATH_GRID                = '/grid';
-export const PATH_FEED                = '/feed';
-export const PATH_ADMIN               = '/admin';
 export const PATH_API                 = '/api';
-export const PATH_SIGN_IN             = '/sign-in';
 export const PATH_OG                  = '/og';
 // eslint-disable-next-line max-len
 export const PATH_GRID_INFERRED       = GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID;
@@ -32,14 +81,6 @@ const PATH_CAMERA_DYNAMIC             = `${PREFIX_CAMERA}/[make]/[model]`;
 // eslint-disable-next-line max-len
 const PATH_FILM_SIMULATION_DYNAMIC    = `${PREFIX_FILM_SIMULATION}/[simulation]`;
 const PATH_FOCAL_LENGTH_DYNAMIC       = `${PREFIX_FOCAL_LENGTH}/[focal]`;
-
-// Admin paths
-export const PATH_ADMIN_PHOTOS        = `${PATH_ADMIN}/photos`;
-export const PATH_ADMIN_OUTDATED      = `${PATH_ADMIN}/outdated`;
-export const PATH_ADMIN_UPLOADS       = `${PATH_ADMIN}/uploads`;
-export const PATH_ADMIN_TAGS          = `${PATH_ADMIN}/tags`;
-export const PATH_ADMIN_CONFIGURATION = `${PATH_ADMIN}/configuration`;
-export const PATH_ADMIN_BASELINE      = `${PATH_ADMIN}/baseline`;
 
 // Debug paths
 export const PATH_OG_ALL              = `${PATH_OG}/all`;
@@ -194,29 +235,6 @@ export const isPathFocalLengthPhoto = (pathname = '') =>
 
 export const checkPathPrefix = (pathname = '', prefix: string) =>
   pathname.toLowerCase().startsWith(prefix);
-
-export const isPathGrid = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_GRID);
-
-export const isPathFeed = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_FEED);
-
-export const isPathSignIn = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_SIGN_IN);
-
-export const isPathAdmin = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_ADMIN);
-
-export const isPathTopLevelAdmin = (pathname?: string) =>
-  PATHS_ADMIN.some(path => path === pathname);
-
-export const isPathAdminConfiguration = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_ADMIN_CONFIGURATION);
-
-export const isPathProtected = (pathname?: string) =>
-  checkPathPrefix(pathname, PATH_ADMIN) ||
-  checkPathPrefix(pathname, pathForTag(TAG_HIDDEN)) ||
-  checkPathPrefix(pathname, PATH_OG);
 
 export const getPathComponents = (pathname = ''): {
   photoId?: string

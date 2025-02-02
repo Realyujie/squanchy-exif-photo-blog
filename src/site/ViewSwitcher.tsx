@@ -1,18 +1,14 @@
-import Switcher from '@/components/Switcher';
-import SwitcherItem from '@/components/SwitcherItem';
-import IconFeed from '@/site/IconFeed';
-import IconGrid from '@/site/IconGrid';
-import {
-  PATH_ADMIN_PHOTOS,
-  PATH_FEED_INFERRED,
-  PATH_GRID_INFERRED,
-} from '@/site/paths';
-import { BiLockAlt } from 'react-icons/bi';
-import IconSearch from './IconSearch';
+import { clsx } from 'clsx/lite';
+import Link from 'next/link';
+import { PATH_ADMIN, PATH_FEED, PATH_GRID, PATH_VIDEOS } from './paths';
+import { BsGrid3X3 } from 'react-icons/bs';
+import { HiOutlineViewList } from 'react-icons/hi';
+import { BiCog } from 'react-icons/bi';
+import { MdOutlineVideoLibrary } from 'react-icons/md';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
 
-export type SwitcherSelection = 'feed' | 'grid' | 'admin';
+export type SwitcherSelection = 'grid' | 'feed' | 'admin';
 
 export default function ViewSwitcher({
   currentSelection,
@@ -23,40 +19,45 @@ export default function ViewSwitcher({
 }) {
   const { setIsCommandKOpen } = useAppState();
 
-  const renderItemFeed = () =>
-    <SwitcherItem
-      icon={<IconFeed />}
-      href={PATH_FEED_INFERRED}
-      active={currentSelection === 'feed'}
-      noPadding
-    />;
-
-  const renderItemGrid = () =>
-    <SwitcherItem
-      icon={<IconGrid />}
-      href={PATH_GRID_INFERRED}
-      active={currentSelection === 'grid'}
-      noPadding
-    />;
+  const buttonClass = (isSelected?: boolean) => clsx(
+    'flex items-center justify-center',
+    'w-10 h-10 rounded-lg',
+    'hover:bg-gray-100 active:bg-gray-200',
+    'hover:dark:bg-gray-800 active:dark:bg-gray-700',
+    isSelected && 'bg-gray-100 dark:bg-gray-800',
+  );
 
   return (
-    <div className="flex gap-1 sm:gap-2">
-      <Switcher>
-        {GRID_HOMEPAGE_ENABLED ? renderItemGrid() : renderItemFeed()}
-        {GRID_HOMEPAGE_ENABLED ? renderItemFeed() : renderItemGrid()}
-        {showAdmin &&
-          <SwitcherItem
-            icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
-            href={PATH_ADMIN_PHOTOS}
-            active={currentSelection === 'admin'}
-          />}
-      </Switcher>
-      <Switcher type="borderless">
-        <SwitcherItem
-          icon={<IconSearch />}
-          onClick={() => setIsCommandKOpen?.(true)}
-        />
-      </Switcher>
+    <div className="flex gap-0.5">
+      <Link
+        href={PATH_GRID}
+        className={buttonClass(currentSelection === 'grid')}
+        aria-label="Grid View"
+      >
+        <BsGrid3X3 size={20} />
+      </Link>
+      <Link
+        href={PATH_FEED}
+        className={buttonClass(currentSelection === 'feed')}
+        aria-label="Feed View"
+      >
+        <HiOutlineViewList size={24} />
+      </Link>
+      <Link
+        href={PATH_VIDEOS}
+        className={buttonClass()}
+        aria-label="Videos"
+      >
+        <MdOutlineVideoLibrary size={22} />
+      </Link>
+      {showAdmin &&
+        <Link
+          href={PATH_ADMIN}
+          className={buttonClass(currentSelection === 'admin')}
+          aria-label="Admin"
+        >
+          <BiCog size={22} />
+        </Link>}
     </div>
   );
 }

@@ -8,6 +8,7 @@ import {
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
   PATH_ADMIN_UPLOADS,
+  PATH_ADMIN_VIDEOS,
 } from '@/site/paths';
 import AdminNavClient from './AdminNavClient';
 
@@ -37,6 +38,13 @@ export default async function AdminNav() {
     href: PATH_ADMIN_PHOTOS,
     count: countPhotos,
   }];
+
+  // Videos
+  items.push({
+    label: 'Videos',
+    href: PATH_ADMIN_VIDEOS,
+    count: 0, // 这里可以添加视频数量的统计
+  });
 
   // Uploads
   if (countUploads > 0) { items.push({
