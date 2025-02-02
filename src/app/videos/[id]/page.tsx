@@ -7,13 +7,16 @@ import { TIMEZONE_COOKIE_NAME } from '@/utility/timezone';
 import PhotoDate from '@/photo/PhotoDate';
 import { Metadata } from 'next';
 
-interface PageProps {
+type Props = {
   params: {
     id: string;
   };
-}
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(
+  { params, searchParams }: Props,
+): Promise<Metadata> {
   const video = await getVideoCached(params.id);
   
   if (!video) {
@@ -28,7 +31,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function VideoPage({ params }: PageProps) {
+export default async function VideoPage({
+  params,
+  searchParams,
+}: Props) {
   const timezone = (await cookies()).get(TIMEZONE_COOKIE_NAME)?.value;
   const video = await getVideoCached(params.id);
   
@@ -57,6 +63,7 @@ export default async function VideoPage({ params }: PageProps) {
                     url: video.thumbnailUrl,
                     blurData: '',
                     aspectRatio: 1.777,
+                    extension: 'jpg',
                   }}
                   dateType="createdAt"
                   timezone={timezone}
