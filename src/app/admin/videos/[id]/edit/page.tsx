@@ -1,33 +1,42 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_VIDEOS } from '@/site/paths';
-import { Video } from '@/types/video';
+import { getVideoCached } from '@/video/cache';
 import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
+import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
-// 这里先用模拟数据，之后可以从数据库获取
-const MOCK_VIDEOS: Video[] = [
-  {
-    id: '1',
-    title: '示例视频 1',
-    description: '这是一个示例视频描述',
-    youtubeId: 'dQw4w9WgXcQ',
-    thumbnailUrl: `https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg`,
-    createdAt: '2024-03-20',
-    updatedAt: '2024-03-20',
-  },
-];
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
 
-export default function AdminVideoEditPage({ params }: { params: { id: string } }) {
-  const video = MOCK_VIDEOS.find(v => v.id === params.id);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const video = await getVideoCached(params.id);
+  
+  if (!video) {
+    return {
+      title: 'Video Not Found',
+    };
+  }
+
+  return {
+    title: `Edit Video - ${video.title}`,
+  };
+}
+
+export default async function AdminVideoEditPage({ params }: PageProps) {
+  const video = await getVideoCached(params.id);
 
   if (!video) {
-    return null; // 或者显示一个 404 页面
+    notFound();
   }
 
   return (
     <AdminChildPage
-      backLabel="视频"
+      backLabel="Videos"
       backPath={PATH_ADMIN_VIDEOS}
-      breadcrumb="编辑视频"
+      breadcrumb="Edit Video"
     >
       <AdminVideoEditClient video={video} />
     </AdminChildPage>
