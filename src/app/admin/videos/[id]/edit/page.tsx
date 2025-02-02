@@ -4,15 +4,16 @@ import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 import { getVideoCached } from '@/video/cache';
 import { notFound } from 'next/navigation';
 
+type tParams = Promise<{ id: string }>;
+
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: tParams;
   searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function AdminVideoEditPage({ params }: PageProps) {
-  const video = await getVideoCached(params.id);
+  const { id } = await params;
+  const video = await getVideoCached(id);
 
   if (!video) {
     notFound();
