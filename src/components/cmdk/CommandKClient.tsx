@@ -10,7 +10,6 @@ import {
   useTransition,
 } from 'react';
 import {
-  PATH_ADMIN_BASELINE,
   PATH_ADMIN_CONFIGURATION,
   PATH_ADMIN_PHOTOS,
   PATH_ADMIN_TAGS,
