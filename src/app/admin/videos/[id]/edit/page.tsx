@@ -5,11 +5,12 @@ import { notFound } from 'next/navigation';
 import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 
 export default async function AdminVideoEditPage({ 
-  params 
+  params: { id }
 }: { 
-  params: { id: string } 
+  params: Promise<{ id: string }> 
 }) {
-  const video = await getVideoCached(params.id);
+  const { id } = await params;
+  const video = await getVideoCached(id);
 
   if (!video) {
     notFound();
