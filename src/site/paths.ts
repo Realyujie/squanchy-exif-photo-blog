@@ -13,6 +13,7 @@ export const PATH_ADMIN               = '/admin';
 export const PATH_API                 = '/api';
 export const PATH_SIGN_IN             = '/sign-in';
 export const PATH_OG                  = '/og';
+export const PATH_VIDEOS              = '/videos';
 // eslint-disable-next-line max-len
 export const PATH_GRID_INFERRED       = GRID_HOMEPAGE_ENABLED ? PATH_ROOT : PATH_GRID;
 // eslint-disable-next-line max-len
@@ -290,3 +291,5 @@ export const getEscapePath = (pathname?: string) => {
     return pathForFocalLength(focal);
   }
 };
+
+export const isPathVideos = (pathname: string) => pathname.startsWith(PATH_VIDEOS);
