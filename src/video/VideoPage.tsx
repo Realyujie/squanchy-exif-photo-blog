@@ -3,33 +3,12 @@
 import { useState } from 'react';
 import { clsx } from 'clsx/lite';
 import SiteGrid from '@/components/SiteGrid';
-
-interface Video {
-  id: string;
-  title: string;
-  thumbnailUrl: string;
-}
-
-const SAMPLE_VIDEOS: Video[] = [
-  {
-    id: 'dQw4w9WgXcQ',
-    title: 'Rick Astley - Never Gonna Give You Up',
-    thumbnailUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
-  },
-  {
-    id: 'jNQXAC9IVRw',
-    title: 'Me at the zoo',
-    thumbnailUrl: 'https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg',
-  },
-  {
-    id: '9bZkp7q19f0',
-    title: 'PSY - GANGNAM STYLE(강남스타일)',
-    thumbnailUrl: 'https://img.youtube.com/vi/9bZkp7q19f0/maxresdefault.jpg',
-  },
-];
+import { Video } from './types';
+import { getVideos } from './utils';
 
 export default function VideoPage() {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const videos = getVideos();
 
   return (
     <SiteGrid
@@ -54,11 +33,14 @@ export default function VideoPage() {
                   allowFullScreen
                 ></iframe>
               </div>
-              <h2 className="text-xl font-bold">{selectedVideo.title}</h2>
+              <div className="space-y-2">
+                <h2 className="text-xl font-bold">{selectedVideo.title}</h2>
+                <p className="text-dim">{selectedVideo.description}</p>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {SAMPLE_VIDEOS.map((video) => (
+              {videos.map((video) => (
                 <div
                   key={video.id}
                   className={clsx(
