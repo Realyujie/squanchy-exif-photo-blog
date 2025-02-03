@@ -8,11 +8,12 @@ import {
   PATH_GRID_INFERRED,
 } from '@/site/paths';
 import { BiLockAlt } from 'react-icons/bi';
+import { BiVideo } from 'react-icons/bi';
 import IconSearch from './IconSearch';
 import { useAppState } from '@/state/AppState';
 import { GRID_HOMEPAGE_ENABLED } from './config';
 
-export type SwitcherSelection = 'feed' | 'grid' | 'admin';
+export type SwitcherSelection = 'feed' | 'grid' | 'admin' | 'video';
 
 export default function ViewSwitcher({
   currentSelection,
@@ -39,11 +40,19 @@ export default function ViewSwitcher({
       noPadding
     />;
 
+  const renderItemVideo = () =>
+    <SwitcherItem
+      icon={<BiVideo size={18} className="translate-y-[-0.5px]" />}
+      href="/videos"
+      active={currentSelection === 'video'}
+    />;
+
   return (
     <div className="flex gap-1 sm:gap-2">
       <Switcher>
         {GRID_HOMEPAGE_ENABLED ? renderItemGrid() : renderItemFeed()}
         {GRID_HOMEPAGE_ENABLED ? renderItemFeed() : renderItemGrid()}
+        {renderItemVideo()}
         {showAdmin &&
           <SwitcherItem
             icon={<BiLockAlt size={16} className="translate-y-[-0.5px]" />}
