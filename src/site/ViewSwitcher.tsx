@@ -42,7 +42,7 @@ export default function ViewSwitcher({
 
   const renderItemVideo = () =>
     <SwitcherItem
-      icon={<BiVideo size={16} className="translate-y-[-0.5px]" />}
+      icon={<BiVideo size={18} className="translate-y-[-0.5px]" />}
       href="/videos"
       active={currentSelection === 'video'}
     />;
