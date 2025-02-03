@@ -10,7 +10,11 @@ import { useRouter } from 'next/navigation';
 import { PATH_ADMIN_VIDEOS } from '@/site/paths';
 import { updateVideoAction } from '@/video/actions';
 
-export default function AdminVideoEditClient({ video }: { video: Video }) {
+interface AdminVideoEditClientProps {
+  video: Video;
+}
+
+export default function AdminVideoEditClient({ video }: AdminVideoEditClientProps) {
   const router = useRouter();
   const [videoTitle, setVideoTitle] = useState(video.title);
   const [videoDescription, setVideoDescription] = useState(video.description || '');

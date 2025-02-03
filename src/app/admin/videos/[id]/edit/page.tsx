@@ -1,10 +1,14 @@
 import AdminChildPage from '@/components/AdminChildPage';
 import { PATH_ADMIN_VIDEOS } from '@/site/paths';
-import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 import { getVideoCached } from '@/video/cache';
 import { notFound } from 'next/navigation';
+import AdminVideoEditClient from '@/admin/AdminVideoEditClient';
 
-export default async function AdminVideoEditPage({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+export default async function AdminVideoEditPage({ params }: PageProps) {
   const video = await getVideoCached(params.id);
 
   if (!video) {
